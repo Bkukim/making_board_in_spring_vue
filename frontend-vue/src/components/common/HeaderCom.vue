@@ -42,8 +42,31 @@
                   <hr class="dropdown-divider" />
                   <!-- 구분선 -->
                 </li>
-                <li><a class="dropdown-item" href="/emp">Emp 연습</a></li>
+                <li><a class="dropdown-item" href="/emp">Emp </a></li>
                 <li><a class="dropdown-item" href="/add-emp">Add Emp</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <!-- 대메뉴 -->
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                심화 예제
+              </a>
+              <!-- 소메뉴 -->
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/fileDb">FileDb</a></li>
+                <li><a class="dropdown-item" href="/add-fileDb">Add FileDb</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                  <!-- 구분선 -->
+                </li>
+                <li><a class="dropdown-item" href="/gallery">Gallery </a></li>
+                <li><a class="dropdown-item" href="/add-gallery">Add Gallery</a></li>
               </ul>
             </li>
           </ul>

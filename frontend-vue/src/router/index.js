@@ -18,6 +18,18 @@ const routes = [
   {
     path: '/dept/:dno',   
     component: () => import("../views/basic/dept/DeptDetail.vue")
+  }, 
+  {
+    path: '/fileDb',   
+    component: () => import("../views/advanced/fileDb/FileDbList.vue")
+  },
+  {
+    path: '/add-fileDb',   
+    component: () => import("../views/advanced/fileDb/addFileDb.vue")
+  },
+  {
+    path: '/gallery',   
+    component: () => import("../views/advanced/gallery/GalleryList.vue")
   },
 ]
 
