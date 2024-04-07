@@ -1,22 +1,24 @@
 package org.example.simpledms.controller.advanced;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.example.simpledms.model.entity.advanced.FileDb;
-import org.example.simpledms.model.entity.basic.Dept;
+
 import org.example.simpledms.service.advanced.FileDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Struct;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * packageName : org.example.simpledms.controller.advanced
@@ -71,6 +73,68 @@ public class FileDbController {
             // 프로그램의 품질이 증가된다.
             // 이걸해주면 에러가 나도 신호가 오기에 에러원인을 알 수있다.
             // INTERNAL_SERVER_ERROR(500) 백엔드 서버 에러
+        }
+
+    }
+    @GetMapping("/fileDb/{uuid}")
+    public ResponseEntity<byte[]> findByIdDownloading(@PathVariable String uuid) {
+        FileDb fileDb = fileDbService.findById(uuid).get();
+
+        return ResponseEntity.ok()
+//           Todo : attachment: => attachment;
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDb.getFileName() + "\"")
+                .body(fileDb.getFileData());
+    }
+    @PostMapping("/fileDb/upload")
+    public ResponseEntity<Object> uploadFileDb(@RequestParam(defaultValue = "") String fileTitle,
+                                               @RequestParam(defaultValue = "") String fileContent,
+                                               @RequestParam MultipartFile image){
+        try {
+                fileDbService.save(null, fileTitle, fileContent, image);
+            return new ResponseEntity<>("업로드 성공", HttpStatus.OK);
+
+        }catch (Exception e){
+            return new ResponseEntity<>("업로드시 에러 발생",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/fileDb/get/{uuid}")
+    public ResponseEntity<Object> getFileDb(@PathVariable String uuid){
+        try {
+            Optional<FileDb> fileDb = fileDbService.findById(uuid);
+            if (fileDb == null) {
+                return new ResponseEntity<>("파일이 존재하지 않음", HttpStatus.NO_CONTENT);
+            }else {
+                return new ResponseEntity<>(fileDb, HttpStatus.OK);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>("문제발생", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/fileDb/update/{uuid}")
+    public ResponseEntity<Object> updateFileDb(@PathVariable String uuid,
+                                               @RequestParam(defaultValue = "") String fileTitle,
+                                               @RequestParam(defaultValue = "") String fileContent,
+                                               @RequestParam MultipartFile image){
+        try {
+            FileDb fileDb = fileDbService.save(uuid, fileTitle, fileContent, image);
+            if (fileDb == null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else {
+                return new ResponseEntity<>("수정 성공", HttpStatus.OK);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("fileDb/delete/{uuid}")
+    public ResponseEntity<Object> deleteFileDb(@PathVariable String uuid){
+        try {
+            fileDbService.removeById(uuid);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

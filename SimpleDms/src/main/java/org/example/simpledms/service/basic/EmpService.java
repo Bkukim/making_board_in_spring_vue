@@ -38,8 +38,8 @@ public class EmpService {
         return list;
     }
 
-    public Page<Emp> findByEnameContaning(String dname, Pageable pageable){
-        Page<Emp> page = empRepository.findAllByEnameContaining(dname, pageable);
+    public Page<Emp> findByEnameContaning(String ename, Pageable pageable){
+        Page<Emp> page = empRepository.findAllByEnameContaining(ename, pageable);
         return page;
     }
 

@@ -13,29 +13,13 @@
               class="form-control"
               id="fileTitle"
               name="fileTitle"
-              v-model="fileDb.fileTitle"
+              v-model="gallery.galleryTitle"
             />
           </div>
         </div>
         <!-- {/* 이미지명 입력 박스 끝 */} -->
   
-        <!-- {/* 이미지내용 입력 박스 시작 */} -->
-        <div class="row g-3 align-items-center mb-3">
-          <div class="col-3">
-            <label htmlFor="fileContent" class="form-label"> 내용 </label>
-          </div>
-  
-          <div class="col-9">
-            <input
-              type="text"
-              class="form-control"
-              id="fileContent"
-              name="fileContent"
-              v-model="fileDb.fileContent"
-            />
-          </div>
-        </div>
-        <!-- {/* 이미지내용 입력 박스 끝 */} -->
+    
   
         <div class="input-group mb-3">
           <!-- {/* upload 선택상자/버튼 start */} -->
@@ -62,18 +46,18 @@
     </div>
   </template>
   <script>
-  import FileDbService from '@/services/advanced/FileDbService.js';
+  import GalleryService from '@/services/advanced/GalleryService';
   export default {
       // TODO: 데이터 바인딩 속성 정의
       data() {
           return {
               currentImage: undefined, // 현재이미지
               message: "",             // 성공메세지 변수
-              fileDb: {
+              gallery: {
                   uuid: null,          
-                  fileTitle: "",
-                  fileContent: "",
-                  fileUrl: ""
+                  galleryTitle: "",
+                  galleryContent: "",
+                  galleryFileUrl: ""
               },                        // 파일 객체
           }
       },
@@ -88,7 +72,7 @@
         },
         async create(){
             try {
-              let response = await FileDbService.save(this.fileDb, this.currentImage);
+              let response = await GalleryService.save(this.gallery, this.currentImage);
               console.log(response);
               this.message = response.data
             } catch (e) {

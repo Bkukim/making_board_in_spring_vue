@@ -16,6 +16,10 @@ const routes = [
     component: () => import("../views/basic/dept/AddDept.vue")
   },
   {
+    path: '/add-emp',   
+    component: () => import("../views/basic/emp/AddEmp.vue")
+  },
+  {
     path: '/dept/:dno',   
     component: () => import("../views/basic/dept/DeptDetail.vue")
   }, 
@@ -28,8 +32,20 @@ const routes = [
     component: () => import("../views/advanced/fileDb/addFileDb.vue")
   },
   {
+    path: '/fileDb/:uuid',   
+    component: () => import("../views/advanced/fileDb/FileDbDetail.vue")
+  },
+  {
     path: '/gallery',   
     component: () => import("../views/advanced/gallery/GalleryList.vue")
+  },
+  {
+    path: '/add-gallery',   
+    component: () => import("../views/advanced/gallery/addGallery.vue")
+  },
+  {
+    path: '/gallery/:uuid',   
+    component: () => import("../views/advanced/gallery/GalleryDetail.vue")
   },
 ]
 

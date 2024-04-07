@@ -38,10 +38,10 @@
 
       <!-- {/* 쇼핑카트 이미지 start */} -->
       <div class="row">
-        <div v-for="(data,index) in fileDb" :key="index" class="col-sm-6">
+        <div v-for="(data,index) in gallery" :key="index" class="col-sm-6">
           <div class="card">
             <!-- 카드 이미지 -->
-            <img :src="data.fileUrl" class="card-img-top" alt="강의" />
+            <img :src="data.galleryFileUrl" class="card-img-top" alt="강의" />
             <!-- 본문 : 제목 + 내용 -->
             <div class="card-body">
                 <!-- 제목 -->
@@ -49,17 +49,17 @@
                 <!-- 내용 -->
               <p class="card-text">{{ data.galleryContent }}</p>
               <router-link :to="'/gallery/' + data.uuid"><span class="badge bg-warning">수정</span></router-link>
-              <a
+              <button
                 style="
                    {
                     color: inherit;
                   }
                 "
                 class="ms-2"
-                @click="deleteFileDb(data.uuid)"
+                @click="deleteGallery(data.uuid)"
               >
                 <span class="badge bg-danger">Delete</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -90,6 +90,7 @@ export default {
             const{gallery, totalItems} = response.data;
             this.gallery = gallery;
             this.count = totalItems;
+            console.log(response.data)
         } catch (e) {
             console.log(e);
         }
@@ -102,6 +103,16 @@ export default {
       this.page = 1; // 현재 페이지 번호 초기화
       this.retrieveGallery(); // 재조회 요청
     },
+    async deleteGallery(uuid){
+      console.log(uuid)
+            try {
+                let response = GalleryService.delete(uuid)
+                console.log(response);
+                this.retrieveGallery();
+            } catch (e) {
+                console.log(e);
+            }
+        }
   },
   mounted() {
     this.retrieveGallery();

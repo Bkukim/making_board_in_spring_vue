@@ -9,15 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * packageName : org.example.simpledms.controller.advanced
@@ -74,6 +74,71 @@ class GalleryController {
             // 프로그램의 품질이 증가된다.
             // 이걸해주면 에러가 나도 신호가 오기에 에러원인을 알 수있다.
             // INTERNAL_SERVER_ERROR(500) 백엔드 서버 에러
+        }
+    }
+
+     @GetMapping("/gallery/{uuid}")
+    public ResponseEntity<byte[]> findByIdDownloading(@PathVariable String uuid) {
+        Gallery gallery = galleryService.findById(uuid).get();
+
+        return ResponseEntity.ok()
+//           Todo : attachment: => attachment;
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + gallery.getGalleryFileName() + "\"")
+                .body(gallery.getGalleryData());
+    }
+
+    @PostMapping("/gallery/upload")
+    public ResponseEntity<Object> uploadGallery(@RequestParam(defaultValue = "") String galleryTitle,
+                                                @RequestParam MultipartFile image) {
+        try {
+
+            galleryService.save(null, galleryTitle, image);
+            return new ResponseEntity<>("업로드 완료", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/gallery/get/{uuid}")
+    public ResponseEntity<Object> getGallery(@PathVariable String uuid){
+        try {
+            Optional<Gallery> gallery = galleryService.findById(uuid);
+            if (gallery == null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else {
+                return new ResponseEntity<>(gallery, HttpStatus.OK);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/gallery/update/{uuid}")
+    public ResponseEntity<Object> updateGallery(@PathVariable String uuid,
+                                                @RequestParam(defaultValue = "") String galleryTitle,
+                                                @RequestParam MultipartFile image){
+        try {
+            Gallery gallery = galleryService.save(uuid, galleryTitle, image);
+            if (gallery == null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else {
+                return new ResponseEntity<>("수정완료",HttpStatus.OK);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/gallery/delete/{uuid}")
+    public ResponseEntity<Object> deleteGallery(@PathVariable String uuid){
+
+        try {
+            boolean result = galleryService.deleteById(uuid);
+            if (result) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -53,7 +53,7 @@ public class GalleryService {
                     // 다운로드에 사용할 url만들기
                     String fileDownload = ServletUriComponentsBuilder
                             .fromCurrentContextPath() // 스프링 기본 url localhost:8000
-                            .path("/advanced/gallery/") // 우리가 만든 url
+                            .path("/api/advanced/gallery/") // 우리가 만든 url
                             .path(tempUuid)
                             .toUriString();
 
@@ -67,7 +67,8 @@ public class GalleryService {
                 }else {
                     String fileDownload = ServletUriComponentsBuilder
                             .fromCurrentContextPath() // 스프링 기본 url localhost:8000
-                            .path("/advanced/gallery/") // 우리가 만든 url
+                            .path("/api" +
+                                    "/advanced/gallery/") // 우리가 만든 url
                             .path(uuid)
                             .toUriString();
 
@@ -90,7 +91,7 @@ public class GalleryService {
         return galleryRepository.findById(uuid);
     }
 
-    public boolean deleteBiId(String uuid){
+    public boolean deleteById(String uuid){
         if (galleryRepository.existsById(uuid)) {
             galleryRepository.deleteById(uuid);
             return true;

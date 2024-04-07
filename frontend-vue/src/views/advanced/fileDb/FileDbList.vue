@@ -48,7 +48,7 @@
               <h5 class="card-title">{{ data.fileTitle }}</h5>
                 <!-- 내용 -->
               <p class="card-text">{{ data.fileContent }}</p>
-              <router-link :to="/fildDb/ + data.uuid"><span class="badge bg-warning">수정</span></router-link>
+              <router-link :to="'/fileDb/' + data.uuid"><span class="badge bg-warning">수정</span></router-link>
               <a
                 style="
                    {
@@ -90,7 +90,7 @@ export default {
             const{fileDb, totalItems} = response.data;
             this.fileDb = fileDb;
             this.count = totalItems;
-            console.log("asdfasdf")
+            console.log(response.data)
         } catch (e) {
             console.log(e);
         }
@@ -103,6 +103,16 @@ export default {
       this.page = 1; // 현재 페이지 번호 초기화
       this.retrieveFileDb(); // 재조회 요청
     },
+    async deleteFileDb(uuid){
+      console.log(uuid)
+            try {
+                let response = FileDbService.delete(uuid)
+                console.log(response);
+                this.retrieveFileDb();
+            } catch (e) {
+                console.log(e);
+            }
+        }
   },
   mounted() {
     this.retrieveFileDb();
